@@ -6,10 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,40 +49,51 @@ fun CalculatorScreen(
 ) {
     Column(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(24.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(
+        Text("Калькулятор", fontSize = 28.sp)
+
+        OutlinedTextField(
             value = input1,
             onValueChange = onInput1Change,
-            label = { Text("Число 1") }
+            label = { Text("Число 1") },
+            modifier = Modifier.fillMaxWidth(0.8f)
         )
-        TextField(
+        OutlinedTextField(
             value = input2,
             onValueChange = onInput2Change,
-            label = { Text("Число 2") }
+            label = { Text("Число 2") },
+            modifier = Modifier.fillMaxWidth(0.8f)
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
             listOf("+", "-", "*", "/").forEach { op ->
-                Button(onClick = {
-                    val num1 = input1.text.toDoubleOrNull()
-                    val num2 = input2.text.toDoubleOrNull()
-                    val calcResult = when (op) {
-                        "+" -> num1?.plus(num2 ?: 0.0)
-                        "-" -> num1?.minus(num2 ?: 0.0)
-                        "*" -> num1?.times(num2 ?: 1.0)
-                        "/" -> if (num2 == 0.0) null else num1?.div(num2 ?: 1.0)
-                        else -> null
-                    }
-                    onResultChange(calcResult?.toString() ?: "Помилка")
-                }) {
-                    Text(op, fontSize = 20.sp)
+                Button(
+                    onClick = {
+                        val num1 = input1.text.toDoubleOrNull()
+                        val num2 = input2.text.toDoubleOrNull()
+                        val calcResult = when (op) {
+                            "+" -> num1?.plus(num2 ?: 0.0)
+                            "-" -> num1?.minus(num2 ?: 0.0)
+                            "*" -> num1?.times(num2 ?: 1.0)
+                            "/" -> if (num2 == 0.0) null else num1?.div(num2 ?: 1.0)
+                            else -> null
+                        }
+                        onResultChange(calcResult?.toString() ?: "Помилка")
+                    },
+                    modifier = Modifier.size(64.dp)
+                ) {
+                    Text(op, fontSize = 22.sp, textAlign = TextAlign.Center)
                 }
             }
         }
 
-        Text("Результат: $result", fontSize = 24.sp)
+        Text("Результат: $result", fontSize = 22.sp)
     }
 }
